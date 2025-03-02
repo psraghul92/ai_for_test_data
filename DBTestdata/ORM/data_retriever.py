@@ -10,13 +10,13 @@ class DataRetriever:
         session_maker = sessionmaker(bind=self.engine)
         self.session = session_maker()
 
-    def get_product_with_highest_units_in_stock(self):
+    def get_product_with_highest_units_in_stock(self) -> list:
         try:
             return [self.session.query(Product).order_by(Product.UnitsInStock.desc()).first().ProductName]
         finally:
             self.close_session()
 
-    def get_list_product_names_based_on_category(self, category_name):
+    def get_list_product_names_based_on_category(self, category_name:str) -> list:
         try:
             result = self.session.query(ViewProductDetailsV).filter(
                 ViewProductDetailsV.CategoryName == category_name).all()
@@ -27,7 +27,7 @@ class DataRetriever:
         finally:
             self.close_session()
 
-    def get_country_with_most_suppliers(self):
+    def get_country_with_most_suppliers(self) -> list:
         try:
             return [self.session.query(Supplier).order_by(Supplier.Country.desc()).first().Country]
         finally:
@@ -39,7 +39,3 @@ class DataRetriever:
             self.session.commit()
             self.session.close()
 
-
-if __name__ == '__main__':
-    data_retriever = DataRetriever()
-    print(data_retriever.get_country_with_most_suppliers())
